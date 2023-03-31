@@ -25,9 +25,10 @@ recursive subroutine count_seq(ct,x,pos,n)
     else 
         x(pos) = 0
         call count_seq(ct,x,pos+1,n)
-        
-        x(pos) = 1
-        call count_seq(ct,x,pos+1,n)
+        if(pos .eq. 1 .or. x(pos-1) .eq. 0) then
+            x(pos) = 1
+            call count_seq(ct,x,pos+1,n)
+        endif
     endif
 
 end subroutine
