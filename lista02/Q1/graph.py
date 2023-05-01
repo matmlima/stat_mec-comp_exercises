@@ -1,13 +1,30 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
+d = np.loadtxt('input.in')
+delta = d[1]
+N = d[0]
 a1 = np.loadtxt('box_muller.out')
 a2 = np.loadtxt('exponential.out')
-delta = 0.01
+g_mean = sum(a1)/len(a1)
+g_var = np.var(a1)
+e_mean = sum(a2)/len(a2)
+e_var = np.var(a2)
+print(g_var,g_mean)
 nb1 =np.arange(min(a1), max(a1) + delta, delta)
 nb2 = np.arange(min(a2), max(a2) + delta, delta)
 fig1,ax1 = plt.subplots()
 fig2,ax2 = plt.subplots()
 ax1.hist(a1[:],bins=nb1,density=True)
+x1 = np.linspace(-10,10,100)
+y1 = 1/np.sqrt(2*np.pi*g_var)*np.exp(-(x1-g_mean)**2/(2*g_var))
+x2 = np.linspace(0,10,100)
+y2 =1/e_mean*np.exp(-x2/e_mean) 
+ax1.plot(x1,y1)
+ax1.set_xlabel('$x_i$')
+ax2.set_xlabel('$x_i$')
+ax1.set_ylabel('$\\rho(x_i)$')
+ax2.set_ylabel('$\\rho(x_i)$')
 ax2.hist(a2[:],bins=nb2,density=True)
+ax2.plot(x2,y2)
 plt.show()

@@ -2,10 +2,10 @@ PROGRAM density_curves
 IMPLICIT NONE
 integer :: i,j,k,N
 real(8), allocatable, dimension(:):: ui, z
-real(8) :: z1,z2,e1
+real(8) :: z1,z2,e1,delta
 
 open(99,file='input.in')
-read(99,*) N
+read(99,*) N,delta
 close(99)
 
 open(98,file='box_muller.out')
