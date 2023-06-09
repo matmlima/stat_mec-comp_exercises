@@ -1,10 +1,10 @@
 program ising
 implicit none
 integer :: i,j,i1,i2,j1,j2,k,k1,N,L, tau
-real(8) :: dH, Sn, m, ep1, T
+real(8) :: dH, Sn,  ep1, T
 integer, dimension(2) :: ii, jj
 real(8), dimension(2) :: ep
-real(8), allocatable, dimension(:) :: E
+real(8), allocatable, dimension(:) :: E, M
 integer, allocatable, dimension(:,:) :: S
 
 open(unit=99, file = 'input.in')
@@ -12,12 +12,12 @@ read(99,*) L, tau, T
 close(99)
 
 allocate(S(L,L))
-allocate(E(tau))
+allocate(E(tau), M(tau))
 
 dH = 0.0d0
 S = 1
 E(1) = -2.0d0*L*L
-print*, E(1)
+M(1) = L*L
 !Metropolis algorithm
 do k = 2, tau
 call random_number(ep) !random number [0,1]
@@ -38,20 +38,21 @@ call random_number(ep1)
 if (exp(-dH/T) .gt. ep1) then
     S(i,j) = -S(i,j)
     E(k) = E(k-1) + dH
+    M(k) = M(k-1) - 2*S(i,j)
+else
+    E(k) = E(k-1)
+    M(k) = M(k-1)
 endif
 enddo
-print*, E(1)
 
-open(unit=98,file='test.test')
-do i1 = 1,L
-    write(98,*) S(i1,:)
-enddo
-close(98)
 
-open(unit=97,file='2test.test')
-do i1 = 1,tau
-    write(97,*) E(i1)
+open(unit=97,file='energy.out')
+open(unit=96,file='magnetization.out')
+do i1 = 1,tau, L**2
+    write(97,*) nint(real(i1)/real(L)**2), E(i1)/L**2
+    write(96,*) nint(real(i1)/real(L)**2), M(i1)/L**2 !nint(real(M(i1))/real(L)**2)
 enddo
+close(97)
 close(97)
 
 END PROGRAM
