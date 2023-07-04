@@ -1,0 +1,1 @@
+O programa ising.f90 realiza o algoritmo de Metropolis para 1 temperatura T, com entrada em input.in. O script temperature_change.py altera input.in variando a temperatura entre 2 < T < 3, compila ising.f90 chama o executavel a.out (gerado pelo ising. f90)

@@ -18,6 +18,7 @@ dH = 0.0d0
 S = 1
 E(1) = -2.0d0*L*L
 M(1) = L*L
+print*, 'Wait...'
 !Metropolis algorithm
 do k = 2, tau
 call random_number(ep) !random number [0,1]
@@ -33,12 +34,12 @@ jj(2) = j+1
 ii = ii - L*floor((real(ii)-0.1d0)/real(L)) !pbc
 jj = jj - L*floor((real(jj)-0.1d0)/real(L)) !pbc
 !print*, 'in', i,ii 
-dH =  -S(i,j)*(S(i,jj(1)) +S(i,jj(2))+S(ii(1),j) + S(ii(2),j))
+dH =  2.0d0*S(i,j)*(S(i,jj(1)) +S(i,jj(2))+S(ii(1),j) + S(ii(2),j))
 call random_number(ep1)
 if (exp(-dH/T) .gt. ep1) then
     S(i,j) = -S(i,j)
     E(k) = E(k-1) + dH
-    M(k) = M(k-1) - 2*S(i,j)
+    M(k) = M(k-1) + 2.0d0*S(i,j)
 else
     E(k) = E(k-1)
     M(k) = M(k-1)
@@ -50,7 +51,7 @@ open(unit=97,file='energy.out')
 open(unit=96,file='magnetization.out')
 do i1 = 1,tau, L**2
     write(97,*) nint(real(i1)/real(L)**2), E(i1)/L**2
-    write(96,*) nint(real(i1)/real(L)**2), M(i1)/L**2 !nint(real(M(i1))/real(L)**2)
+    write(96,*) nint(real(i1)/real(L)**2), abs(M(i1))/L**2 !nint(real(M(i1))/real(L)**2)
 enddo
 close(97)
 close(97)
